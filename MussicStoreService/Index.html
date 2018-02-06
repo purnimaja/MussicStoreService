@@ -1,0 +1,193 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title></title>
+	<meta charset="utf-8" />
+    <script src="scripts/jquery-3.2.1.min.js"></script>
+    <link rel="stylesheet" href="Content/bootstrap.css"/>
+</head>
+<body><!--/http://localhost:58572/generes/all-->
+    <div class="container">
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                <h2>Invoke ASP.NET WEB API USING JQUERY AJAX</h2>
+            </div>
+            <div class="panel-body">
+                <button class="btn btn-primary" onclick="GetAllGeneres()">
+                    View All Generes
+                </button>
+                    <input type="text" id="txt">
+                    <button class="btn btn-primary" onclick="GetAllGeneresById()">
+                        View Genere By Id
+                    </button>
+                <input type="text" id="txt1">
+                <button class="btn btn-primary" onclick="GetAllAlbumsById()">
+                    View Albums By Id
+                </button>
+                <br/>
+                <br/>Insert
+                <input type="text" id="gid">
+                <input type="text" id="gname">
+                <button class="btn btn-primary" onclick="InsertGenere()">
+                    Insert new Genere
+                    </button>
+                <br>
+                <br>Delete
+                <input type="text" id="del">
+                <button class="btn btn-primary" onclick="DeleteGenere()">
+                    Delete Genere
+                    </button>
+                <br>
+                <br>Update
+                <input type="text" id="id">
+                <input type="text" id="name">
+                <button class="btn btn-primary" onclick="UpdateGenere()">
+                    Update Genere
+                    </button>
+                <span id="result"></span>
+                    
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        function GetAllGeneres()
+        {
+            $.ajax({
+
+                type: 'GET',
+                url: 'http://localhost:58572/generes/all',
+                success: function (result) {
+                    $("#result").html("");
+                    for (var i = 0; i < result.length; i++) {
+                        $("#result").append("Genere Id:" + result[i].Genereid);
+                        $("#result").append("<br>Genere name:" + result[i].Generename);
+                        $("#result").append("<br/>");
+
+                    }
+                },
+                error: function (error) {
+                    alert("ERROR:" + error);
+                }
+
+            });
+
+        }
+
+        function InsertGenere()
+        {
+            var genere = new Object();
+            genere.Genereid = $("#gid").val();
+            genere.Generename = $("#gname").val();
+
+            $.ajax({
+                type: 'POST',
+                url: 'http://localhost:58572/Generes/addGenere',
+                contentType: 'application/json',
+                data: JSON.stringify(genere),
+
+                success: function (result) {
+                    alert("Inserted Successfully!!!");
+                },
+
+                error: function (error) {
+                    //alert("ERROR:" + error);
+                    //alert(JSON.parse(error.responseText).Message);
+                    //alert(JSON.parse(error.responseText).Message);
+                }
+            });
+        }
+
+
+        function DeleteGenere()
+        {
+            var Genereid =$("#del").val();
+            $.ajax({
+                type: 'DELETE',
+                url: 'http://localhost:58572/Generes/deleteGenere/' + Genereid,
+
+                success: function (result) {
+                    alert("Records are deleted");
+                },
+                error: function (error) {
+                    alert(JSON.parse(error.responseText).Message);
+                }
+            });
+      }
+        
+        
+        function UpdateGenere()
+        {
+            
+            var Genereid = $("#id").val();
+            var Generename =$("#name").val()
+            $.ajax({
+                type: 'PUT',
+                url: 'http://localhost:58572/Generes/updategenere/' + Genereid + '/' + Generename,
+                success:function(result)
+                {
+                    alert("Records are updated");
+                },
+                error:function(error)
+                {
+                    alert(JSON.parse(error.responseText).Message);
+                }
+                
+
+
+            })
+        }
+
+
+        function GetAllGeneresById() {
+            $.ajax({
+                type: 'GET',
+                url: 'http://localhost:58572/generes/genere/' + $("#txt").val(),
+                success: function (result) {
+                    $("#result").html("");
+                  
+                        $("#result").append("Genere Id:" + result.Genereid);
+                        $("#result").append("<br>Genere name:" + result.Generename);
+                        $("#result").append("<br/>");
+
+                    
+                },
+                error: function (error) {
+                   // alert("ERROR:" + error);
+                    alert(JSON.parse(error.responseText).Message);
+                }
+
+            })
+
+        }
+
+
+        function GetAllAlbumsById() {
+            $.ajax({
+                type: 'GET',
+                url: 'http://localhost:58572/albums/albums/' + $("#txt1").val(),
+                success: function (result) {
+                    $("#result").html("");
+
+                    $("#result").append("Album Id:" + result.albumid);
+                    $("#result").append("<br>Album name:" + result.albumname);
+                    $("#result").append("<br/>");
+
+
+                },
+                error: function (error) {
+                    //alert("ERROR:" + error);
+                    alert(JSON.parse(error.responseText).Message);
+                }
+
+            });
+
+        }
+
+
+        </script>
+
+    </body> 
+
+</html>
